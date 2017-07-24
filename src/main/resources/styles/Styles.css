@@ -1,0 +1,7 @@
+#bpContainer {
+    -fx-padding: 5px;
+}
+
+#hboxTop, #hboxCenter, #hboxBottom {
+    -fx-padding: 5px;
+}

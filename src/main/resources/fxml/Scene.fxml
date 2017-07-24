@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="bpContainer" prefWidth="1024" prefHeight="768" xmlns:fx="http://javafx.com/fxml" fx:controller="clucgdc.pdfone.FXMLController">
+    <top>
+        <HBox fx:id="hboxTop">
+            <children>
+                <Button fx:id="btnLoad" text="Load PDF" onAction="#loadPdf" />
+                <Button fx:id="btnSaveNew" text="Save New PDF" onAction="#saveNewPdf" />
+                <Button fx:id="btnB" text="Load PDF" />
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <HBox fx:id="hboxCenter">
+            <children>
+            </children>
+        </HBox>
+    </center>
+    <bottom>
+        <HBox fx:id="hboxBottom">
+            <children>
+                <Label fx:id="lblStatus" text="Status" />
+            </children>
+        </HBox>
+    </bottom>        
+</BorderPane>
