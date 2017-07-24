@@ -31,5 +31,5 @@ public class Readme {
     
     public static final String HEADER = "PDF One\nRelease: July 2017\nAuthor: Cam Luc";
     
-    public static final String CONTENT = "Use this program to create a new PDF file from pages of an existing PDF file";
+    public static final String CONTENT = "Use this program to create a new PDF file from pages of an existing PDF file e.g. To remove pages that contain ads";
 }
