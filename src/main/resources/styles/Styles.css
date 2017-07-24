@@ -4,4 +4,13 @@
 
 #hboxTop, #hboxCenter, #hboxBottom {
     -fx-padding: 5px;
+    -fx-spacing: 5px;
+}
+
+.button {
+    -fx-pref-height: 36px;
+}
+
+#btnReadme {
+    -fx-graphic: url('../images/question-mark-24.png')
 }

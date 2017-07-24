@@ -21,39 +21,47 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 public class FXMLController implements Initializable {
 
     @FXML
+    private BorderPane bpContainer;
+    @FXML
     private HBox hboxCenter;
     @FXML
     private Label lblStatus;
 
     private TableView<Page> tblPages;
+    private Stage stage;
+    private FileChooser fileChooser_ToOpen;
+    private FileChooser fileChooser_ToSave;
 
     private PDDocument pdfDoc;
     private PDFTextStripper reader;
 
     private static final String NO_TEXT = "(No text preview)";
     private static final String NO_PAGE_SELECTED = "No page was selected";
+
     private static final int PREVIEW_CHARS = 150;
 
     @FXML
     private void loadPdf(ActionEvent event) {
-        /*
-        ObservableList<Page> items = FXCollections.observableArrayList(
-                new Page(false, "A"),
-                new Page(false, "B")
-        );
-        tblPages.setItems(items);*/
+        File pdf = getUserOpenFile();
+        if (pdf == null) {
+            return;
+        }
 
-        File pdf = new File("d:/tmp/ny.pdf");
         try {
             pdfDoc = PDDocument.load(pdf);
             tblPages.setItems(FXCollections.observableArrayList(getSimplifiedPages()));
@@ -71,6 +79,11 @@ public class FXMLController implements Initializable {
             return;
         }
 
+        File saveToFile = getUserSaveFile();
+        if (saveToFile == null) {
+            return;
+        }
+
         PDDocument newDoc = new PDDocument();
 
         List<Integer> selectedPageIndexes = selectedPages.stream().map(p -> p.getPageIndex()).collect(Collectors.toList());
@@ -78,7 +91,7 @@ public class FXMLController implements Initializable {
         selectedPageIndexes.forEach((i) -> {
             newDoc.addPage(pdfDoc.getPage(i));
         });
-        newDoc.save("d:/tmp/newfile.pdf");
+        newDoc.save(saveToFile);
     }
 
     @Override
@@ -92,6 +105,26 @@ public class FXMLController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private File getUserOpenFile() {
+        if (stage == null || fileChooser_ToOpen == null) {
+            stage = (Stage) bpContainer.getScene().getWindow();
+            fileChooser_ToOpen = new FileChooser();
+            fileChooser_ToOpen.setTitle("Open PDF File");
+            fileChooser_ToOpen.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        }
+        return fileChooser_ToOpen.showOpenDialog(stage);
+    }
+
+    private File getUserSaveFile() {
+        if (stage == null || fileChooser_ToSave == null) {
+            stage = (Stage) bpContainer.getScene().getWindow();
+            fileChooser_ToSave = new FileChooser();
+            fileChooser_ToSave.setTitle("Save as New PDF File");
+            fileChooser_ToSave.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        }
+        return fileChooser_ToSave.showSaveDialog(stage);
     }
 
     private TableView<Page> createTable() {
@@ -134,9 +167,26 @@ public class FXMLController implements Initializable {
 
     private void showWarning(String msg) {
         Alert alert = new Alert(AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setContentText(msg);
+        alert.setTitle(AlertType.WARNING.name());
+        alert.setHeaderText(msg);
 
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void showReadme(ActionEvent event) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(AlertType.INFORMATION.name());
+        alert.setHeaderText(Readme.HEADER);
+
+        TextArea textArea = new TextArea(Readme.CONTENT);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        alert.getDialogPane().setExpandableContent(textArea);
+        alert.getDialogPane().setExpanded(true);
         alert.showAndWait();
     }
 }
